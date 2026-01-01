@@ -54,30 +54,33 @@ app.post("/analyze", async (req, res) => {
             "You are an ethical technology assistant. You explain privacy policies in plain language, focusing on consent, data usage, and potential harm. Do not give legal advice."
         },
         {
-          role: "user",
-    content: `
-    You are given the FULL TEXT of a privacy policy below.
-    You do NOT need to access any website or external link.
+  role: "user",
+  content: `
+You are analyzing text scraped from a webpage.
 
-    Your task:
-    - Read the text
-    - Analyze consent, data usage, and potential ethical concerns
-    - Respond ONLY with valid JSON
-    - Do NOT include explanations or extra text
+First, determine whether this text is actually a privacy policy or terms-related document.
 
-    Return JSON in this exact structure:
-    {
-      "plainSummary": string,
-      "ethicalFlags": string[],
-      "transparencyLevel": "Low" | "Medium" | "High"
-    }
+If it is NOT a privacy policy:
+Return this JSON:
+{
+  "plainSummary": "This page does not appear to be a privacy policy.",
+  "ethicalFlags": [],
+  "transparencyLevel": "Unknown"
+}
 
-    Privacy policy text:
-    """
-    ${text.slice(0, 6000)}
-    """
-          `
-        }
+If it IS a privacy policy:
+Return JSON with this structure:
+{
+  "plainSummary": string,
+  "ethicalFlags": string[],
+  "transparencyLevel": "Low" | "Medium" | "High"
+}
+
+Webpage text:
+${text.slice(0, 6000)}
+`
+}
+
       ]
     });
 
