@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "Ethical Consent Analyzer",
+  "version": "1.0",
+  "description": "Explains privacy policies in plain language",
+  "permissions": ["activeTab"],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}
