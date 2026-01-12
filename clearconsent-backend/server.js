@@ -46,43 +46,40 @@ app.post("/analyze", async (req, res) => {
 
     // 2. Send to LLM
     const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        {
-          role: "system",
-          content:
-            "You are an ethical technology assistant. You explain privacy policies in plain language, focusing on consent, data usage, and potential harm. Do not give legal advice."
-        },
-        {
-  role: "user",
-  content: `
-You are analyzing text scraped from a webpage.
+  model: "gpt-4o-mini",
+  response_format: { type: "json_object" },
+  messages: [
+    {
+      role: "system",
+      content:
+        "You explain privacy policies in plain language. Always respond ONLY with valid JSON."
+    },
+    {
+      role: "user",
+      content: `
+Analyze the following webpage text.
 
-First, determine whether this text is actually a privacy policy or terms-related document.
-
-If it is NOT a privacy policy:
-Return this JSON:
+If this is NOT a privacy policy, return:
 {
   "plainSummary": "This page does not appear to be a privacy policy.",
   "ethicalFlags": [],
   "transparencyLevel": "Unknown"
 }
 
-If it IS a privacy policy:
-Return JSON with this structure:
+If it IS a privacy policy, return:
 {
   "plainSummary": string,
   "ethicalFlags": string[],
   "transparencyLevel": "Low" | "Medium" | "High"
 }
 
-Webpage text:
+Text:
 ${text.slice(0, 6000)}
-`
-}
+      `
+    }
+  ]
+});
 
-      ]
-    });
 
     // 3. Parse response
     let analysis;
