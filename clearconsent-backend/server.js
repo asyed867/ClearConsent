@@ -46,40 +46,53 @@ app.post("/analyze", async (req, res) => {
 
     // 2. Send to LLM
     const completion = await openai.chat.completions.create({
-  model: "gpt-4o-mini",
-  response_format: { type: "json_object" },
-  messages: [
-    {
-      role: "system",
-      content:
-        "You explain privacy policies in plain language. Always respond ONLY with valid JSON."
-    },
-    {
-      role: "user",
-      content: `
-Analyze the following webpage text.
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are an independent third-party ethical technology analyst. You NEVER speak as the company. You ALWAYS describe the company in the third person (for example: 'the company', 'this service', 'the website'). You explain what the USER is agreeing to in plain language. You NEVER say 'we', 'us', or 'our'. You ALWAYS respond ONLY with valid JSON.Be factual and neutral, not promotional. Do not give elgal advice"
+        },
+        {
+  role: "user",
+  content: `Translate the following privacy policy into what a normal user is actually agreeing to.
 
-If this is NOT a privacy policy, return:
+Do NOT summarize the document.
+Do NOT describe the company from its own perspective.
+
+Explain:
+- What data the user is giving up
+- How that data may be used against the user's interests
+- What consent is implicit, bundled, or difficult to avoid
+- What meaningful choices (if any) the user actually has
+
+Ethical flags:
+You MUST populate "ethicalFlags".
+Each flag should be a short, specific phrase describing a potential ethical concern.
+Add a flag whenever you detect:
+- Broad or vague data collection
+- Data used for advertising, profiling, or tracking
+- Data shared with third parties
+- Consent that is implied by use rather than explicit
+- Opt-outs that are difficult or hidden
+- Data retention that is long, unclear, or indefinite
+
+If NONE apply, return ["No major ethical concerns detected"].
+
+Return ONLY valid JSON in this format:
 {
-  "plainSummary": "This page does not appear to be a privacy policy.",
+  "plainSummary": "A clear third-person explanation of what the user is agreeing to",
   "ethicalFlags": [],
-  "transparencyLevel": "Unknown"
-}
-
-If it IS a privacy policy, return:
-{
-  "plainSummary": string,
-  "ethicalFlags": string[],
   "transparencyLevel": "Low" | "Medium" | "High"
 }
 
-Text:
-${text.slice(0, 6000)}
-      `
-    }
-  ]
-});
+Privacy policy text:
+${text.slice(0, 6000)}`
+}
 
+
+      ]
+    });
 
     // 3. Parse response
     let analysis;
