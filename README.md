@@ -2,7 +2,7 @@
 
 Clear Consent is a Chrome extension that helps users understand what they are actually agreeing to when they accept a website’s privacy policy.
 
-Instead of summarizing legal text, the tool analyzes a privacy policy from a live webpage URL and explains user consent in plain language. It highlights ethical concerns such as data collection, tracking, and implied consent, and provides a transparency rating.
+The extension analyzes a privacy policy from a live webpage URL and explains user consent in plain language. It highlights ethical concerns such as data collection, tracking, and implied consent, and provides a transparency rating.
 
 ---
 
@@ -33,6 +33,44 @@ Instead of summarizing legal text, the tool analyzes a privacy policy from a liv
 5. The results are displayed in the extension.
 
 ---
+
+## Setup
+
+### Requirements
+- Node.js (v18+ recommended)
+- Google Chrome
+- OpenAI API key
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone <your-repo-link>
+   cd <project-folder>
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Create a `.env` file in the root directory and add:
+   ```
+   OPENAI_API_KEY=your_api_key_here
+   ```
+
+4. Start the backend server:
+   ```bash
+   node server.js
+   ```
+
+5. Load the Chrome extension:
+   - Go to `chrome://extensions`
+   - Enable **Developer mode**
+   - Click **Load unpacked**
+   - Select the extension folder
+
+Once the server is running, open any website and click the extension to analyze its privacy policy. The extension connects to the local backend at `http://localhost:3001`.
 
 ## Disclaimer
 
